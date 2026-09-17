@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Previa Épica</string>
+    <string name="title_activity_main">Previa Épica</string>
+    <string name="package_name">com.previaepica.app</string>
+    <string name="custom_url_scheme">com.previaepica.app</string>
+</resources>

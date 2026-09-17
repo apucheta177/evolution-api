@@ -1,4 +1,6 @@
+import { useEffect } from 'react';
 import { GameProvider, useGame } from './state/GameContext';
+import { initAds, maybeShowInterstitial } from './ads/AdManager';
 import { Home } from './screens/Home';
 import { Menu } from './screens/Menu';
 import { Impostor } from './games/Impostor';
@@ -15,7 +17,13 @@ import { DibujarYAdivinar } from './games/DibujarYAdivinar';
 import { RankingDelGrupo } from './games/RankingDelGrupo';
 
 function Router() {
-  const { screen } = useGame();
+  const { screen, isPremium } = useGame();
+
+  // Un solo interstitial al abrir la app (nunca más de uno por sesión acá).
+  useEffect(() => {
+    initAds().then(() => maybeShowInterstitial(isPremium));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   switch (screen) {
     case 'home':

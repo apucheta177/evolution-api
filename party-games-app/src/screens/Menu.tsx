@@ -3,7 +3,7 @@ import { GAMES } from '../data/games';
 import './Menu.css';
 
 export function Menu() {
-  const { mode, setMode, openGame, players, goHome } = useGame();
+  const { mode, setMode, openGame, players, goHome, isPremium, setIsPremium } = useGame();
 
   return (
     <div className="menu">
@@ -12,6 +12,9 @@ export function Menu() {
           👥 {players.length}
         </button>
         <h1>Elegí un juego</h1>
+        <button className="premium-btn" onClick={() => setIsPremium(!isPremium)}>
+          {isPremium ? '⭐ Premium activo' : '🔓 Quitar anuncios'}
+        </button>
         <div className="mode-switch">
           <button
             className={`mode-pill ${mode === 'light' ? 'active-light' : ''}`}

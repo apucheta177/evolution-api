@@ -1,5 +1,6 @@
 import { createContext, useContext, useMemo, useState, type ReactNode } from 'react';
 import type { GameId, Mode } from '../types';
+import { maybeShowInterstitial } from '../ads/AdManager';
 
 interface GameContextValue {
   players: string[];
@@ -15,6 +16,8 @@ interface GameContextValue {
   nextPlayerIndex: number;
   advanceTurn: () => void;
   randomPlayer: (exclude?: string[]) => string | undefined;
+  isPremium: boolean;
+  setIsPremium: (value: boolean) => void;
 }
 
 const GameContext = createContext<GameContextValue | undefined>(undefined);
@@ -24,6 +27,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
   const [mode, setMode] = useState<Mode>('light');
   const [screen, setScreen] = useState<'home' | 'menu' | GameId>('home');
   const [turnIndex, setTurnIndex] = useState(0);
+  const [isPremium, setIsPremium] = useState(false);
 
   const addPlayer = (name: string) => {
     const trimmed = name.trim();
@@ -37,7 +41,10 @@ export function GameProvider({ children }: { children: ReactNode }) {
 
   const goHome = () => setScreen('home');
   const goMenu = () => setScreen('menu');
-  const openGame = (id: GameId) => setScreen(id);
+  const openGame = (id: GameId) => {
+    setScreen(id);
+    void maybeShowInterstitial(isPremium);
+  };
 
   const advanceTurn = () => {
     setTurnIndex((prev) => (players.length ? (prev + 1) % players.length : 0));
@@ -64,8 +71,10 @@ export function GameProvider({ children }: { children: ReactNode }) {
       nextPlayerIndex: turnIndex,
       advanceTurn,
       randomPlayer,
+      isPremium,
+      setIsPremium,
     }),
-    [players, mode, screen, turnIndex],
+    [players, mode, screen, turnIndex, isPremium],
   );
 
   return <GameContext.Provider value={value}>{children}</GameContext.Provider>;

@@ -29,6 +29,15 @@
   font-weight: 700;
 }
 
+.premium-btn {
+  background: var(--surface);
+  color: var(--yellow);
+  border-radius: 999px;
+  padding: 8px 14px;
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
 .mode-switch {
   display: flex;
   gap: 8px;
