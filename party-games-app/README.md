@@ -41,6 +41,14 @@ Los juegos con consecuencia por perder (Impostor, La Frente, Verdad o Reto, Triv
 
 Todo el contenido de texto (categorías, preguntas, frases, cartas) vive en `src/data/*.ts`, separado de la lógica de los juegos en `src/games/*.tsx`, para poder editarlo fácil.
 
+## Build como página única (para compartir un link jugable)
+
+```bash
+npm run build:artifact
+```
+
+Genera `dist-artifact/index.html`, un único archivo HTML autocontenido (CSS y JS inlineados) que se puede subir a cualquier hosting estático para tener un link jugable.
+
 ## Modo multi-dispositivo
 
 Por ahora la app está pensada 100% para el modo "pasar el celular de mano en mano". El modo multi-dispositivo (cada jugador desde su propio celular) queda como mejora futura.
