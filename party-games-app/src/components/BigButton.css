@@ -1,0 +1,39 @@
+.big-btn {
+  border-radius: var(--radius);
+  padding: 18px 22px;
+  font-size: 1.15rem;
+  font-weight: 800;
+  transition: transform 0.1s ease, filter 0.15s ease;
+  color: var(--text);
+  width: 100%;
+}
+
+.big-btn:active {
+  transform: scale(0.97);
+}
+
+.big-btn-primary {
+  background: linear-gradient(135deg, var(--pink), var(--purple));
+  box-shadow: 0 8px 24px rgba(255, 63, 164, 0.35);
+}
+
+.big-btn-secondary {
+  background: linear-gradient(135deg, var(--teal), var(--purple));
+  box-shadow: 0 8px 24px rgba(60, 232, 197, 0.25);
+}
+
+.big-btn-ghost {
+  background: var(--surface);
+  border: 2px solid var(--surface-alt);
+}
+
+.big-btn-danger {
+  background: linear-gradient(135deg, var(--red), #b3202b);
+  box-shadow: 0 8px 24px rgba(255, 77, 77, 0.3);
+}
+
+.big-btn:disabled {
+  opacity: 0.4;
+  filter: grayscale(0.4);
+  transform: none;
+}

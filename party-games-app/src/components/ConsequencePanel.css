@@ -1,0 +1,34 @@
+.consequence-panel {
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.consequence-toggle {
+  display: flex;
+  gap: 8px;
+}
+
+.toggle-pill {
+  flex: 1;
+  padding: 10px;
+  border-radius: 999px;
+  background: var(--surface-alt);
+  color: var(--text-dim);
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+.toggle-pill.active {
+  background: linear-gradient(135deg, var(--orange), var(--pink));
+  color: white;
+}
+
+.consequence-result {
+  text-align: center;
+  font-size: 1.05rem;
+  font-weight: 700;
+}
