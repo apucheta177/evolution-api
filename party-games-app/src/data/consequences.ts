@@ -1,0 +1,28 @@
+// Consecuencias neutrales por defecto (sin alcohol) para juegos con "castigo".
+// Cada juego puede ofrecer el toggle "cambiar por trago" para reemplazar esto por un trago.
+export const NEUTRAL_CONSEQUENCES: string[] = [
+  'Contá la mentira más grande que le dijiste a tu vieja y que nunca se enteró.',
+  'Hacele un currículum hablado de 30 segundos a la persona de tu derecha, como si fueras su representante.',
+  'Imitá a alguien del grupo pidiendo un fernet con coca hasta que adivinen a quién.',
+  'Actuá como si te acabaras de despertar de una siesta un domingo a las 19hs, en pleno living.',
+  'Contale al grupo la excusa más pavota que usaste para faltar al laburo o a la facu.',
+  'Hacé de relator de fútbol narrando lo que está pasando en la mesa ahora mismo, con toda la exageración.',
+  'Bancate que alguien del grupo te agende en su celu con un apodo que decida ahora, y listo, así te van a decir el resto de la noche.',
+  'Contá cuál es el chiste que más se repite en tu familia y que ya nadie encuentra gracioso, menos vos.',
+  'Hacé la mímica de "estacionar en batería en Palermo un sábado a la noche" sin hablar.',
+  'Recitá de memoria (o inventá) la formación titular de la selección en el partido que mejor recordás.',
+  'Contale al grupo tu técnica secreta para no pagar de más en el boliche.',
+  'Hacé de guardia de boliche por 20 segundos: parate serio y no dejes pasar a nadie.',
+  'Describí a alguien del grupo como si fuera un producto en oferta de Mercado Libre, con "envío gratis" incluido.',
+  'Contá con lujo de detalle tu peor síntoma de resaca, actuado en cámara lenta.',
+  'Hacé la voz de un locutor de radio de madrugada anunciando "tránsito lento en Panamericana" mientras señalás la mesa.',
+  'Dejá que el grupo te invente un mote de jugador de fútbol de barrio para el resto de la noche.',
+  'Contá el curro más grande que le hiciste a un profesor sin que se diera cuenta.',
+  'Actuá como si estuvieras discutiendo por WhatsApp sin decir una palabra, solo con caras.',
+  'Hacé de canillita: "vendé" un diario imaginario gritando el título más escandaloso que se te ocurra.',
+  'Contale al grupo la mentira piadosa que le decís siempre a tu casero/a sobre el alquiler.',
+  'Bailá 15 segundos de cuarteto o cumbia (lo que se te dé mejor) parado arriba de una silla, si hay una a mano.',
+  'Hacele un "aguante" de cancha a la persona que elija el grupo, con bombo imaginario incluido.',
+  'Contá cuál fue tu peor devolución de un Uber/remisero y actuá la cara que pusiste.',
+  'Imitá a un vecino tuyo puteando por el volumen de la música en la previa.',
+];

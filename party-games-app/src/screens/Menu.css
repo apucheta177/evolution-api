@@ -1,0 +1,113 @@
+.menu {
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding-bottom: calc(20px + var(--safe-bottom));
+}
+
+.menu-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 20px;
+  position: relative;
+}
+
+.menu-header h1 {
+  font-size: 1.6rem;
+  text-align: center;
+}
+
+.players-btn {
+  position: absolute;
+  left: 20px;
+  top: 20px;
+  background: var(--surface);
+  color: var(--text);
+  border-radius: 999px;
+  padding: 8px 14px;
+  font-weight: 700;
+}
+
+.premium-btn {
+  background: var(--surface);
+  color: var(--yellow);
+  border-radius: 999px;
+  padding: 8px 14px;
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+.mode-switch {
+  display: flex;
+  gap: 8px;
+  background: var(--surface);
+  padding: 6px;
+  border-radius: 999px;
+}
+
+.mode-pill {
+  padding: 10px 18px;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text-dim);
+  font-weight: 800;
+  font-size: 0.95rem;
+}
+
+.mode-pill.active-light {
+  background: linear-gradient(135deg, var(--yellow), var(--teal));
+  color: #16091f;
+}
+
+.mode-pill.active-picante {
+  background: linear-gradient(135deg, var(--red), var(--pink));
+  color: white;
+}
+
+.game-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+  padding: 0 16px;
+}
+
+.game-card {
+  border-radius: var(--radius);
+  padding: 18px 14px;
+  min-height: 150px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  text-align: center;
+  color: white;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35);
+}
+
+.game-card:active {
+  transform: scale(0.96);
+}
+
+.game-emoji {
+  font-size: 2.2rem;
+}
+
+.game-title {
+  font-weight: 900;
+  font-size: 1.02rem;
+  line-height: 1.15;
+}
+
+.game-tagline {
+  font-size: 0.78rem;
+  opacity: 0.9;
+  line-height: 1.2;
+}
+
+@media (min-width: 480px) {
+  .game-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}

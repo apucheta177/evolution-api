@@ -1,0 +1,30 @@
+export const RANKING_LIGHT: string[] = [
+  'Ordenen de mayor a menor quién se emborracha más rápido.',
+  'Ordenen de mayor a menor quién es más probable que se pierda volviendo a su casa.',
+  'Ordenen de mayor a menor quién tarda más en arreglarse para salir.',
+  'Ordenen de mayor a menor quién es más gracioso/a del grupo.',
+  'Ordenen de mayor a menor quién es más impuntual.',
+  'Ordenen de mayor a menor quién gasta más plata en boludeces.',
+  'Ordenen de mayor a menor quién es más dramático/a.',
+  'Ordenen de mayor a menor quién aguanta más sin mirar el celular.',
+  'Ordenen de mayor a menor quién cocina mejor.',
+  'Ordenen de mayor a menor quién es más competitivo/a jugando a algo.',
+  'Ordenen de mayor a menor quién se enoja más rápido.',
+  'Ordenen de mayor a menor quién sería mejor líder de un grupo.',
+  'Ordenen de mayor a menor quién duerme menos horas por semana.',
+  'Ordenen de mayor a menor quién es más aventurero/a.',
+  'Ordenen de mayor a menor quién tiene el peor sentido de la orientación.',
+];
+
+export const RANKING_PICANTE: string[] = [
+  'Ordenen de mayor a menor quién coquetea mejor.',
+  'Ordenen de mayor a menor quién es más probable que tenga una historia picante escondida.',
+  'Ordenen de mayor a menor quién aguanta más tragos sin perder la compostura.',
+  'Ordenen de mayor a menor quién es más celoso/a en una relación.',
+  'Ordenen de mayor a menor quién tiene más éxito en apps de citas.',
+  'Ordenen de mayor a menor quién es más probable que le escriba a un ex de madrugada.',
+  'Ordenen de mayor a menor quién es más picante en sus conversaciones.',
+  'Ordenen de mayor a menor quién se enamora más rápido.',
+  'Ordenen de mayor a menor quién tiene la lista de "prohibidos" más larga.',
+  'Ordenen de mayor a menor quién es más seductor/a a propósito.',
+];
