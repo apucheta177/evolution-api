@@ -5,7 +5,7 @@ import { BigButton } from '../components/BigButton';
 import { Timer } from '../components/Timer';
 import { ConsequencePanel } from '../components/ConsequencePanel';
 import { ENCADENADOS_LIGHT, ENCADENADOS_PICANTE } from '../data/encadenados';
-import { pickRandom } from '../utils/random';
+import { useDeck } from '../utils/deck';
 import '../components/game.css';
 
 type Phase = 'ready' | 'playing' | 'loserPick' | 'consequence';
@@ -16,7 +16,7 @@ export function Encadenados() {
   const { players, mode } = useGame();
   const bank = mode === 'light' ? ENCADENADOS_LIGHT : ENCADENADOS_PICANTE;
 
-  const [category, setCategory] = useState(() => pickRandom(bank));
+  const { current: category, next: nextCategoryCard } = useDeck(bank);
   const [duration, setDuration] = useState(30);
   const [phase, setPhase] = useState<Phase>('ready');
   const [running, setRunning] = useState(false);
@@ -39,7 +39,7 @@ export function Encadenados() {
   };
 
   const newRound = () => {
-    setCategory(pickRandom(bank));
+    nextCategoryCard();
     setRound((r) => r + 1);
     setLoser(null);
     setPhase('ready');

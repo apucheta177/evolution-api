@@ -4,7 +4,7 @@ import { Screen } from '../components/Screen';
 import { BigButton } from '../components/BigButton';
 import { SecretTurnFlow } from '../components/SecretTurnFlow';
 import { ENCUESTA_SECRETA_LIGHT, ENCUESTA_SECRETA_PICANTE } from '../data/encuestaSecreta';
-import { pickRandom } from '../utils/random';
+import { useDeck } from '../utils/deck';
 import '../components/game.css';
 
 type Phase = 'question' | 'voting' | 'results';
@@ -14,11 +14,11 @@ export function EncuestaSecreta() {
   const bank = mode === 'light' ? ENCUESTA_SECRETA_LIGHT : ENCUESTA_SECRETA_PICANTE;
 
   const [phase, setPhase] = useState<Phase>('question');
-  const [question, setQuestion] = useState(() => pickRandom(bank));
+  const { current: question, next: nextQuestionCard } = useDeck(bank);
   const [votes, setVotes] = useState<Record<string, string>>({});
 
   const newQuestion = () => {
-    setQuestion(pickRandom(bank));
+    nextQuestionCard();
     setPhase('question');
   };
 

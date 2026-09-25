@@ -4,7 +4,7 @@ import { Screen } from '../components/Screen';
 import { BigButton } from '../components/BigButton';
 import { SecretTurnFlow } from '../components/SecretTurnFlow';
 import { RANKING_LIGHT, RANKING_PICANTE } from '../data/ranking';
-import { pickRandom } from '../utils/random';
+import { useDeck } from '../utils/deck';
 import '../components/game.css';
 
 type Phase = 'question' | 'ranking' | 'results';
@@ -46,11 +46,11 @@ export function RankingDelGrupo() {
   const bank = mode === 'light' ? RANKING_LIGHT : RANKING_PICANTE;
 
   const [phase, setPhase] = useState<Phase>('question');
-  const [question, setQuestion] = useState(() => pickRandom(bank));
+  const { current: question, next: nextQuestionCard } = useDeck(bank);
   const [rankings, setRankings] = useState<Record<string, string[]>>({});
 
   const newQuestion = () => {
-    setQuestion(pickRandom(bank));
+    nextQuestionCard();
     setPhase('question');
   };
 

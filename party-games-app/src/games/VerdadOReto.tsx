@@ -4,7 +4,7 @@ import { Screen } from '../components/Screen';
 import { BigButton } from '../components/BigButton';
 import { TurnBanner } from '../components/TurnBanner';
 import { VERDADES_LIGHT, VERDADES_PICANTE, RETOS_LIGHT, RETOS_PICANTE } from '../data/verdadOReto';
-import { pickRandom } from '../utils/random';
+import { useDeck } from '../utils/deck';
 import '../components/game.css';
 
 export function VerdadOReto() {
@@ -13,13 +13,17 @@ export function VerdadOReto() {
 
   const [card, setCard] = useState<{ type: 'verdad' | 'reto'; text: string } | null>(null);
 
-  const bankFor = (type: 'verdad' | 'reto') =>
-    type === 'verdad'
-      ? mode === 'light' ? VERDADES_LIGHT : VERDADES_PICANTE
-      : mode === 'light' ? RETOS_LIGHT : RETOS_PICANTE;
+  const verdadDeck = useDeck(mode === 'light' ? VERDADES_LIGHT : VERDADES_PICANTE);
+  const retoDeck = useDeck(mode === 'light' ? RETOS_LIGHT : RETOS_PICANTE);
 
   const choose = (type: 'verdad' | 'reto') => {
-    setCard({ type, text: pickRandom(bankFor(type)) });
+    if (type === 'verdad') {
+      setCard({ type, text: verdadDeck.current });
+      verdadDeck.next();
+    } else {
+      setCard({ type, text: retoDeck.current });
+      retoDeck.next();
+    }
   };
 
   const next = () => {

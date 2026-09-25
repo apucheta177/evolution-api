@@ -5,7 +5,7 @@ import { BigButton } from '../components/BigButton';
 import { Timer } from '../components/Timer';
 import { TurnBanner } from '../components/TurnBanner';
 import { MIMICA_LIGHT, MIMICA_PICANTE } from '../data/mimica';
-import { pickRandom } from '../utils/random';
+import { useDeck } from '../utils/deck';
 import '../components/game.css';
 
 type Phase = 'ready' | 'wordShown' | 'playing' | 'roundEnd';
@@ -16,13 +16,12 @@ export function Mimica() {
   const player = players[nextPlayerIndex % players.length];
 
   const [phase, setPhase] = useState<Phase>('ready');
-  const [word, setWord] = useState(() => pickRandom(bank));
+  const { current: word, next: nextWordCard } = useDeck(bank);
   const [running, setRunning] = useState(false);
   const [round, setRound] = useState(0);
   const [score, setScore] = useState(0);
 
   const startTurn = () => {
-    setWord(pickRandom(bank));
     setPhase('wordShown');
   };
 
@@ -39,6 +38,7 @@ export function Mimica() {
 
   const nextPlayer = () => {
     advanceTurn();
+    nextWordCard();
     setRound((r) => r + 1);
     setPhase('ready');
   };

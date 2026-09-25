@@ -4,17 +4,17 @@ import { Screen } from '../components/Screen';
 import { BigButton } from '../components/BigButton';
 import { ConsequencePanel } from '../components/ConsequencePanel';
 import { NUNCA_NUNCA_LIGHT, NUNCA_NUNCA_PICANTE } from '../data/nuncaNunca';
-import { pickRandom } from '../utils/random';
+import { useDeck } from '../utils/deck';
 import '../components/game.css';
 
 export function NuncaNunca() {
   const { mode } = useGame();
   const bank = mode === 'light' ? NUNCA_NUNCA_LIGHT : NUNCA_NUNCA_PICANTE;
-  const [phrase, setPhrase] = useState(() => pickRandom(bank));
+  const { current: phrase, next: nextPhraseCard } = useDeck(bank);
   const [round, setRound] = useState(0);
 
   const next = () => {
-    setPhrase(pickRandom(bank));
+    nextPhraseCard();
     setRound((r) => r + 1);
   };
 

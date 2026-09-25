@@ -1,19 +1,26 @@
-import { useEffect, useState } from 'react';
-import { randomNeutralConsequence } from '../data/consequences';
+import { useEffect, useRef, useState } from 'react';
+import { NEUTRAL_CONSEQUENCES } from '../data/consequences';
+import { useDeck } from '../utils/deck';
 import './ConsequencePanel.css';
 
 /**
  * Panel de "castigo" reutilizable: por defecto muestra una consecuencia neutral,
  * con un toggle para que el grupo decida cambiarla por un trago. Nunca es la única opción.
- * `trigger` cambia en cada nueva ronda para regenerar la consecuencia.
+ * `trigger` cambia en cada nueva ronda para pasar a la siguiente consecuencia sin repetir.
  */
 export function ConsequencePanel({ trigger }: { trigger: number }) {
   const [wantsTrago, setWantsTrago] = useState(false);
-  const [consequence, setConsequence] = useState(randomNeutralConsequence());
+  const { current: consequence, next } = useDeck(NEUTRAL_CONSEQUENCES);
+  const isFirstRender = useRef(true);
 
   useEffect(() => {
-    setConsequence(randomNeutralConsequence());
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+    next();
     setWantsTrago(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [trigger]);
 
   return (

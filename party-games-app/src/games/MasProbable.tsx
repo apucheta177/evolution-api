@@ -4,7 +4,7 @@ import { Screen } from '../components/Screen';
 import { BigButton } from '../components/BigButton';
 import { SecretTurnFlow } from '../components/SecretTurnFlow';
 import { MAS_PROBABLE_LIGHT, MAS_PROBABLE_PICANTE } from '../data/masProbable';
-import { pickRandom } from '../utils/random';
+import { useDeck } from '../utils/deck';
 import '../components/game.css';
 
 type Phase = 'phrase' | 'voting' | 'results';
@@ -14,11 +14,11 @@ export function MasProbable() {
   const bank = mode === 'light' ? MAS_PROBABLE_LIGHT : MAS_PROBABLE_PICANTE;
 
   const [phase, setPhase] = useState<Phase>('phrase');
-  const [phrase, setPhrase] = useState(() => pickRandom(bank));
+  const { current: phrase, next: nextPhraseCard } = useDeck(bank);
   const [votes, setVotes] = useState<Record<string, string>>({});
 
   const newPhrase = () => {
-    setPhrase(pickRandom(bank));
+    nextPhraseCard();
     setPhase('phrase');
   };
 

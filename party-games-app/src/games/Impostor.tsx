@@ -4,6 +4,7 @@ import { Screen } from '../components/Screen';
 import { BigButton } from '../components/BigButton';
 import { IMPOSTOR_LIGHT, IMPOSTOR_PICANTE, type ImpostorCategory } from '../data/impostor';
 import { pickRandom, shuffle } from '../utils/random';
+import { useDeck, useKeyedDeckPool } from '../utils/deck';
 import '../components/game.css';
 
 type Phase = 'setup' | 'reveal' | 'discuss' | 'result';
@@ -11,6 +12,10 @@ type Phase = 'setup' | 'reveal' | 'discuss' | 'result';
 export function Impostor() {
   const { players, mode } = useGame();
   const categories = mode === 'light' ? IMPOSTOR_LIGHT : IMPOSTOR_PICANTE;
+  const categoryDeck = useDeck(categories);
+  // Las categorías Light y Picante no comparten nombres, así que un solo pool
+  // de por vida del componente alcanza sin resetear al cambiar de modo.
+  const wordPool = useKeyedDeckPool<string>();
 
   const [phase, setPhase] = useState<Phase>('setup');
   const [category, setCategory] = useState<ImpostorCategory | null>(null);
@@ -22,12 +27,18 @@ export function Impostor() {
 
   const startRound = (cat: ImpostorCategory) => {
     setCategory(cat);
-    setWord(pickRandom(cat.words));
+    setWord(wordPool.draw(cat.name, cat.words));
     setImpostor(pickRandom(players));
     setOrder(shuffle(players));
     setRevealIndex(0);
     setCardOpen(false);
     setPhase('reveal');
+  };
+
+  const startRandomRound = () => {
+    const cat = categoryDeck.current;
+    categoryDeck.next();
+    startRound(cat);
   };
 
   const currentPlayer = order[revealIndex];
@@ -47,7 +58,7 @@ export function Impostor() {
       {phase === 'setup' && (
         <div className="game-panel">
           <p>Elegí una categoría para esta ronda (o dejá que el destino decida).</p>
-          <BigButton onClick={() => startRound(pickRandom(categories))}>🎲 Categoría al azar</BigButton>
+          <BigButton onClick={startRandomRound}>🎲 Categoría al azar</BigButton>
           <div className="category-grid">
             {categories.map((cat) => (
               <button key={cat.name} className="category-btn" onClick={() => startRound(cat)}>

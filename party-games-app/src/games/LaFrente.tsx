@@ -7,7 +7,7 @@ import { FRENTE_LIGHT, FRENTE_PICANTE, type FrenteCategory } from '../data/frent
 import { shuffle } from '../utils/random';
 import '../components/game.css';
 
-type Phase = 'setup' | 'showWord' | 'guessing' | 'done';
+type Phase = 'setup' | 'handoff' | 'showWord' | 'guessing' | 'done';
 
 export function LaFrente() {
   const { players, mode } = useGame();
@@ -26,7 +26,7 @@ export function LaFrente() {
     setCategory(cat);
     setAssignments(players.map((player, i) => ({ player, word: words[i] })));
     setTurnIndex(0);
-    setPhase('showWord');
+    setPhase('handoff');
     setRunning(false);
   };
 
@@ -38,7 +38,7 @@ export function LaFrente() {
       setPhase('done');
     } else {
       setTurnIndex((i) => i + 1);
-      setPhase('showWord');
+      setPhase('handoff');
       setRound((r) => r + 1);
     }
   };
@@ -55,6 +55,20 @@ export function LaFrente() {
               </button>
             ))}
           </div>
+        </div>
+      )}
+
+      {phase === 'handoff' && current && (
+        <div className="game-panel">
+          <p className="game-subtle">Turno de</p>
+          <h2>{current.player}</h2>
+          <p className="game-card-reveal">
+            ⚠️ {current.player}, no mires la pantalla. Pasale el celu a otra persona para que lo sostenga.
+          </p>
+          <p className="game-subtle">Cuando lo tenga alguien más (no {current.player}), tocá para revelar la palabra.</p>
+          <BigButton variant="secondary" onClick={() => setPhase('showWord')}>
+            Ya lo tiene otra persona, mostrar palabra
+          </BigButton>
         </div>
       )}
 

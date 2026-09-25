@@ -4,14 +4,14 @@ import { Screen } from '../components/Screen';
 import { BigButton } from '../components/BigButton';
 import { Timer } from '../components/Timer';
 import { TRIVIA_LIGHT, TRIVIA_PICANTE } from '../data/trivia';
-import { pickRandom } from '../utils/random';
+import { useDeck } from '../utils/deck';
 import '../components/game.css';
 
 export function TriviaExpres() {
   const { mode } = useGame();
   const bank = mode === 'light' ? TRIVIA_LIGHT : TRIVIA_PICANTE;
 
-  const [question, setQuestion] = useState(() => pickRandom(bank));
+  const { current: question, next: nextCard } = useDeck(bank);
   const [selected, setSelected] = useState<number | null>(null);
   const [round, setRound] = useState(0);
   const [score, setScore] = useState({ correct: 0, total: 0 });
@@ -23,7 +23,7 @@ export function TriviaExpres() {
   };
 
   const nextQuestion = () => {
-    setQuestion(pickRandom(bank));
+    nextCard();
     setSelected(null);
     setRound((r) => r + 1);
   };
