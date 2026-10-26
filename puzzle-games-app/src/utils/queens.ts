@@ -51,7 +51,10 @@ function partitionRegions(size: number, solution: number[]): number[][] {
       if (remaining <= 0) break;
       const queue = frontiers[r];
       while (queue.length) {
-        const idx = Math.floor(Math.random() * queue.length);
+        // Crecimiento tipo "serpiente": casi siempre sigue desde la celda más
+        // reciente (forma tiras largas y sinuosas), de vez en cuando salta a
+        // una celda vieja del frente para que la región también se ramifique.
+        const idx = Math.random() < 0.85 ? queue.length - 1 : Math.floor(Math.random() * queue.length);
         const [cr, cc] = queue[idx];
         const neighbors = (
           [[cr - 1, cc], [cr + 1, cc], [cr, cc - 1], [cr, cc + 1]] as [number, number][]

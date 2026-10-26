@@ -28,6 +28,24 @@
   aspect-ratio: 1;
   background: var(--surface);
   border-radius: 3px;
+  color: var(--text);
+  text-align: center;
+  font-size: clamp(0.9rem, 4vw, 1.2rem);
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.xw-cell.is-selected {
+  outline: 2px solid var(--amber);
+  outline-offset: -2px;
+}
+
+.xw-cell.is-filled {
+  background: var(--surface-alt);
+}
+
+.xw-cell.is-wrong .xw-letter {
+  color: var(--red);
 }
 
 .xw-blocked {
@@ -43,25 +61,34 @@
   pointer-events: none;
 }
 
-.xw-input {
+.xw-letter {
+  pointer-events: none;
+}
+
+.xw-tile-pool {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: center;
   width: 100%;
-  height: 100%;
-  background: transparent;
-  border: none;
-  color: var(--text);
-  text-align: center;
-  font-size: clamp(0.9rem, 4vw, 1.2rem);
-  font-weight: 800;
-  text-transform: uppercase;
 }
 
-.xw-input:focus {
-  outline: 2px solid var(--amber);
-  outline-offset: -2px;
+.xw-tile {
+  width: 38px;
+  height: 38px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, var(--amber), var(--pink));
+  color: #1b1f2e;
+  font-weight: 900;
+  font-size: 1.1rem;
 }
 
-.xw-input.is-wrong {
-  color: var(--red);
+.xw-tile:disabled {
+  opacity: 0.45;
+}
+
+.xw-tile:not(:disabled):active {
+  transform: scale(0.92);
 }
 
 .xw-clues {

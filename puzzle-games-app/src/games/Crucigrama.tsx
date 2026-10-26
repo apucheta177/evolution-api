@@ -1,21 +1,44 @@
-import { useMemo, useRef, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Screen } from '../components/Screen';
 import { BigButton } from '../components/BigButton';
 import { CROSSWORDS } from '../data/crosswords';
 import { buildCrossword, type CrosswordPuzzleDef } from '../utils/crossword';
 import './Crucigrama.css';
 
+function shuffle<T>(arr: T[]): T[] {
+  const copy = [...arr];
+  for (let i = copy.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+  }
+  return copy;
+}
+
 export function Crucigrama() {
   const [def, setDef] = useState<CrosswordPuzzleDef | null>(null);
-  const [values, setValues] = useState<string[][]>([]);
   const [checked, setChecked] = useState(false);
-  const inputsRef = useRef<Record<string, HTMLInputElement | null>>({});
+  const [selected, setSelected] = useState<[number, number] | null>(null);
+  // placement[r][c] = id de la ficha puesta ahí, o null si está vacía
+  const [placement, setPlacement] = useState<(number | null)[][]>([]);
+  const [poolOrder, setPoolOrder] = useState<number[]>([]);
+  const [tileLetters, setTileLetters] = useState<string[]>([]);
 
   const built = useMemo(() => (def ? buildCrossword(def) : null), [def]);
 
   const start = (puzzleDef: CrosswordPuzzleDef) => {
+    const b = buildCrossword(puzzleDef);
+    const letters: string[] = [];
+    const empty: (number | null)[][] = Array.from({ length: b.size }, () => Array(b.size).fill(null));
+    for (let r = 0; r < b.size; r++) {
+      for (let c = 0; c < b.size; c++) {
+        if (!b.blocked[r][c]) letters.push(b.solution[r][c]);
+      }
+    }
     setDef(puzzleDef);
-    setValues(Array.from({ length: puzzleDef.size }, () => Array(puzzleDef.size).fill('')));
+    setTileLetters(letters);
+    setPoolOrder(shuffle(letters.map((_l, i) => i)));
+    setPlacement(empty);
+    setSelected(null);
     setChecked(false);
   };
 
@@ -37,21 +60,50 @@ export function Crucigrama() {
   }
 
   const solved =
-    checked &&
+    poolOrder.length === 0 &&
     built.across.concat(built.down).every((clue) =>
-      clue.cells.every(([r, c]) => values[r][c] === built.solution[r][c]),
+      clue.cells.every(([r, c]) => {
+        const id = placement[r][c];
+        return id !== null && tileLetters[id] === built.solution[r][c];
+      }),
     );
 
-  const setCell = (r: number, c: number, letter: string) => {
-    setValues((prev) => {
-      const next = prev.map((row) => [...row]);
-      next[r][c] = letter.toUpperCase().slice(-1);
-      return next;
-    });
+  const nextEmptyCell = (fromR: number, fromC: number): [number, number] | null => {
+    const cells: [number, number][] = [];
+    for (let r = 0; r < built.size; r++) for (let c = 0; c < built.size; c++) cells.push([r, c]);
+    const startIdx = fromR * built.size + fromC;
+    for (let i = 1; i <= cells.length; i++) {
+      const [r, c] = cells[(startIdx + i) % cells.length];
+      if (!built.blocked[r][c] && placement[r][c] === null) return [r, c];
+    }
+    return null;
   };
 
-  const focusCell = (r: number, c: number) => {
-    inputsRef.current[`${r}-${c}`]?.focus();
+  const tapCell = (r: number, c: number) => {
+    if (built.blocked[r][c]) return;
+    const id = placement[r][c];
+    if (id !== null) {
+      // devolver la ficha al pool
+      const next = placement.map((row) => [...row]);
+      next[r][c] = null;
+      setPlacement(next);
+      setPoolOrder((prev) => [...prev, id]);
+      setSelected([r, c]);
+    } else {
+      setSelected([r, c]);
+    }
+  };
+
+  const placeTile = (poolIndex: number) => {
+    if (!selected) return;
+    const [r, c] = selected;
+    if (placement[r][c] !== null) return;
+    const tileId = poolOrder[poolIndex];
+    const next = placement.map((row) => [...row]);
+    next[r][c] = tileId;
+    setPlacement(next);
+    setPoolOrder((prev) => prev.filter((_, i) => i !== poolIndex));
+    setSelected(nextEmptyCell(r, c));
   };
 
   return (
@@ -63,31 +115,24 @@ export function Crucigrama() {
               return <div key={`${r}-${c}`} className="xw-cell xw-blocked" />;
             }
             const number = built.numberAt[r][c];
-            const value = values[r][c];
-            const isWrong = checked && value && value !== built.solution[r][c];
+            const id = placement[r][c];
+            const letter = id !== null ? tileLetters[id] : '';
+            const isWrong = checked && letter && letter !== built.solution[r][c];
+            const isSelected = selected?.[0] === r && selected?.[1] === c;
             return (
-              <div key={`${r}-${c}`} className="xw-cell">
+              <button
+                key={`${r}-${c}`}
+                className={[
+                  'xw-cell',
+                  isWrong ? 'is-wrong' : '',
+                  isSelected ? 'is-selected' : '',
+                  letter ? 'is-filled' : '',
+                ].join(' ')}
+                onClick={() => tapCell(r, c)}
+              >
                 {number && <span className="xw-number">{number}</span>}
-                <input
-                  ref={(el) => {
-                    inputsRef.current[`${r}-${c}`] = el;
-                  }}
-                  className={`xw-input ${isWrong ? 'is-wrong' : ''}`}
-                  maxLength={1}
-                  value={value}
-                  onChange={(e) => {
-                    setCell(r, c, e.target.value);
-                    if (e.target.value && c + 1 < built.size && !built.blocked[r][c + 1]) {
-                      focusCell(r, c + 1);
-                    }
-                  }}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Backspace' && !value && c - 1 >= 0 && !built.blocked[r][c - 1]) {
-                      focusCell(r, c - 1);
-                    }
-                  }}
-                />
-              </div>
+                <span className="xw-letter">{letter}</span>
+              </button>
             );
           }),
         )}
@@ -99,9 +144,23 @@ export function Crucigrama() {
           <BigButton onClick={backToSetup}>Otro crucigrama</BigButton>
         </div>
       ) : (
-        <BigButton variant="secondary" onClick={() => setChecked(true)}>
-          Revisar
-        </BigButton>
+        <>
+          <div className="xw-tile-pool">
+            {poolOrder.map((tileId, poolIndex) => (
+              <button
+                key={tileId}
+                className="xw-tile"
+                disabled={!selected}
+                onClick={() => placeTile(poolIndex)}
+              >
+                {tileLetters[tileId]}
+              </button>
+            ))}
+          </div>
+          <BigButton variant="secondary" onClick={() => setChecked(true)}>
+            Revisar
+          </BigButton>
+        </>
       )}
 
       <div className="xw-clues">

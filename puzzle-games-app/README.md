@@ -4,11 +4,11 @@ App web de acertijos para jugar solo/a en el celular. Sin anuncios, sin cuentas,
 
 ## Juegos
 
-1. **Meowdoku** — un gatito 🐾 por fila, por columna y por región de color; dos gatitos no pueden tocarse (ni en diagonal). Generador propio con solución única garantizada (partición de regiones + reparación automática hasta converger), 3 tamaños (6×6, 7×7, 8×8).
-2. **Criptograma** — cada letra del abecedario representa siempre otra letra; hay que descifrar la frase con el teclado en pantalla. Banco de frases originales.
-3. **Sopa de Letras** — generador de grillas por tema (gatos, comida, animales, naturaleza, ciudad), con selección de palabras tocando la primera y la última letra.
-4. **Crucigrama** — un puñado de mini-crucigramas armados a mano, con pistas horizontales y verticales.
-5. **Frase Oculta** — una frase cifrada arriba, y abajo varias pistas (definiciones cortas); al acertar cada palabra se revelan sus letras en la frase de arriba, hasta completarla entera.
+1. **Meowdoku** — un gatito 🐾 por fila, por columna y por región de color; dos gatitos no pueden tocarse (ni en diagonal). Generador propio con solución única garantizada (partición de regiones con crecimiento tipo serpiente + reparación automática hasta converger), 3 tamaños (6×6, 7×7, 8×8).
+2. **Sopa de Letras** — generador de grillas por tema (gatos, comida, animales, naturaleza, ciudad), con selección de palabras tocando la primera y la última letra.
+3. **Crucigrama** — un puñado de mini-crucigramas armados a mano, pero se completan con fichas de letra (como un Scrabble) en vez de tipear, tocando una celda y después una ficha del pool.
+4. **Frase Oculta** — una frase cifrada arriba, y abajo varias pistas (definiciones cortas); al acertar cada palabra se revelan sus letras en la frase de arriba, hasta completarla entera. Siempre hay una forma lógica de arrancar (a diferencia de un criptograma a ciegas).
+5. **Banderas** — al estilo Seterra: se muestra una bandera, hay que tocar el país correcto entre 4 opciones. Banco de 50 países.
 
 ## Cómo correrla
 

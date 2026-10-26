@@ -1,4 +1,4 @@
-export type GameId = 'meowdoku' | 'criptograma' | 'sopaDeLetras' | 'crucigrama' | 'fraseOculta';
+export type GameId = 'meowdoku' | 'sopaDeLetras' | 'crucigrama' | 'fraseOculta' | 'banderas';
 
 export interface GameDef {
   id: GameId;
