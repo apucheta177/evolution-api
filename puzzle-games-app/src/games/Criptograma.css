@@ -1,0 +1,106 @@
+.crypto-hint {
+  color: var(--text-dim);
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+.crypto-board {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: center;
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: 16px 10px;
+  width: 100%;
+}
+
+.crypto-cell {
+  background: var(--surface-alt);
+  border-radius: 8px;
+  width: 34px;
+  height: 44px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--text);
+}
+
+.crypto-guess {
+  font-size: 1.05rem;
+  font-weight: 900;
+  min-height: 1.2em;
+}
+
+.crypto-cipher {
+  font-size: 0.6rem;
+  color: var(--text-dim);
+}
+
+.crypto-cell.is-selected {
+  background: var(--amber);
+}
+.crypto-cell.is-selected .crypto-cipher {
+  color: #1b1f2e;
+}
+
+.crypto-cell.is-filled .crypto-guess {
+  color: var(--pink);
+}
+
+.crypto-cell.is-correct .crypto-guess {
+  color: var(--teal);
+}
+
+.crypto-space {
+  width: 14px;
+}
+
+.crypto-keyboard {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+  width: 100%;
+}
+
+.crypto-key {
+  background: var(--surface);
+  border-radius: 8px;
+  padding: 10px 0;
+  font-weight: 800;
+  color: var(--text);
+}
+
+.crypto-key.is-used {
+  background: var(--surface-alt);
+  color: var(--text-dim);
+}
+
+.crypto-key:disabled {
+  opacity: 0.5;
+}
+
+.button-row-crypto {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+}
+
+.button-row-crypto > * {
+  flex: 1;
+}
+
+.crypto-won {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  align-items: center;
+  width: 100%;
+  max-width: 320px;
+}
+
+.crypto-won-text {
+  font-size: 1.4rem;
+  font-weight: 900;
+}

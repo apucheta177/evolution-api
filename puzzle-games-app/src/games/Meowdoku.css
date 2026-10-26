@@ -1,0 +1,93 @@
+.meowdoku-setup {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  width: 100%;
+  max-width: 360px;
+  margin-top: 40px;
+}
+
+.meowdoku-intro {
+  text-align: center;
+  color: var(--text-dim);
+  margin-bottom: 8px;
+}
+
+.meowdoku-grid {
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  gap: 1px;
+  background: var(--surface-alt);
+  border: 2px solid var(--amber);
+  border-radius: 12px;
+  overflow: hidden;
+  width: 100%;
+  max-width: 400px;
+  aspect-ratio: 1;
+}
+
+.meowdoku-cell {
+  background: var(--surface);
+  color: var(--text);
+  font-size: clamp(0.9rem, 4vw, 1.3rem);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 1;
+}
+
+.meowdoku-cell.is-clue {
+  background: var(--surface-alt);
+  font-weight: 900;
+}
+
+.meowdoku-cell.is-selected {
+  background: rgba(255, 182, 72, 0.35);
+}
+
+.meowdoku-cell.is-conflict {
+  background: rgba(255, 107, 107, 0.35);
+}
+
+.meowdoku-cell.border-left {
+  border-left: 2px solid var(--amber);
+}
+
+.meowdoku-cell.border-top {
+  border-top: 2px solid var(--amber);
+}
+
+.meowdoku-palette {
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  gap: 6px;
+  width: 100%;
+  max-width: 400px;
+}
+
+.palette-btn {
+  background: var(--surface);
+  border-radius: 10px;
+  padding: 10px 0;
+  font-size: 1.3rem;
+}
+
+.palette-btn:active {
+  transform: scale(0.9);
+  background: var(--surface-alt);
+}
+
+.meowdoku-won {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  align-items: center;
+  margin-top: 16px;
+  width: 100%;
+  max-width: 320px;
+}
+
+.meowdoku-won-text {
+  font-size: 1.4rem;
+  font-weight: 900;
+}

@@ -1,0 +1,41 @@
+.big-btn {
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  font-size: 1.08rem;
+  font-weight: 800;
+  transition: transform 0.1s ease, filter 0.15s ease;
+  color: var(--text);
+  width: 100%;
+}
+
+.big-btn:active {
+  transform: scale(0.97);
+}
+
+.big-btn-primary {
+  background: linear-gradient(135deg, var(--amber), var(--pink));
+  color: #1b1f2e;
+  box-shadow: 0 8px 24px rgba(255, 182, 72, 0.25);
+}
+
+.big-btn-secondary {
+  background: linear-gradient(135deg, var(--teal), #4f93c9);
+  color: #1b1f2e;
+  box-shadow: 0 8px 24px rgba(125, 216, 198, 0.2);
+}
+
+.big-btn-ghost {
+  background: var(--surface);
+  border: 2px solid var(--surface-alt);
+}
+
+.big-btn-danger {
+  background: linear-gradient(135deg, var(--red), #b3302b);
+  box-shadow: 0 8px 24px rgba(255, 107, 107, 0.25);
+}
+
+.big-btn:disabled {
+  opacity: 0.4;
+  filter: grayscale(0.4);
+  transform: none;
+}
