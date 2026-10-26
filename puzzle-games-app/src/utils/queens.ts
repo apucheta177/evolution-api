@@ -1,4 +1,4 @@
-export type CellState = 'empty' | 'x' | 'cat';
+export type CellState = 'empty' | 'x' | 'cat' | 'wrong';
 
 export interface QueensPuzzle {
   size: number;
@@ -123,38 +123,85 @@ export function countQueensSolutions(size: number, region: number[][], limit = 2
   return findSolutions(size, region, limit).length;
 }
 
+function neighborsOf(size: number, r: number, c: number): [number, number][] {
+  return (
+    [[r - 1, c], [r + 1, c], [r, c - 1], [r, c + 1]] as [number, number][]
+  ).filter(([nr, nc]) => nr >= 0 && nr < size && nc >= 0 && nc < size);
+}
+
+function hasNeighborInRegion(size: number, region: number[][], cell: [number, number], regionId: number): boolean {
+  return neighborsOf(size, cell[0], cell[1]).some(([nr, nc]) => region[nr][nc] === regionId);
+}
+
+/** ¿Siguen conectadas entre sí las celdas de `regionId`, si sacamos `removed`? (para no partir una región al mover una celda) */
+function staysConnectedWithoutCell(
+  size: number,
+  region: number[][],
+  regionId: number,
+  removed: [number, number],
+): boolean {
+  const cells: [number, number][] = [];
+  for (let r = 0; r < size; r++) {
+    for (let c = 0; c < size; c++) {
+      if (region[r][c] === regionId && !(r === removed[0] && c === removed[1])) cells.push([r, c]);
+    }
+  }
+  if (cells.length <= 1) return true;
+  const key = ([r, c]: [number, number]) => `${r}-${c}`;
+  const cellSet = new Set(cells.map(key));
+  const visited = new Set([key(cells[0])]);
+  const stack = [cells[0]];
+  while (stack.length) {
+    const cur = stack.pop()!;
+    for (const n of neighborsOf(size, cur[0], cur[1])) {
+      const k = key(n);
+      if (cellSet.has(k) && !visited.has(k)) {
+        visited.add(k);
+        stack.push(n);
+      }
+    }
+  }
+  return visited.size === cells.length;
+}
+
 /**
  * Intenta llevar una partición a solución única reparándola: cada vez que
- * aparece una solución alternativa a `canonical`, fusiona la celda donde
- * difieren (en la fila `row`) con la región de otra fila de esa misma
- * solución alternativa — así esa solución deja de ser válida (dos reinas
- * en la misma región) sin tocar nunca ninguna celda de `canonical`.
- * Una vez reparada una celda queda "bloqueada": no se vuelve a tocar, para
- * que los arreglos nunca se deshagan entre sí (si no, puede oscilar).
+ * aparece una solución alternativa a `canonical`, busca una celda donde
+ * difieren (en la fila `row`) que además sea vecina directa de la región de
+ * otra fila de esa misma solución alternativa, y la fusiona a esa región —
+ * así esa solución deja de ser válida (dos reinas en la misma región) sin
+ * tocar ninguna celda de `canonical`, y sin crear una "isla" suelta: el
+ * movimiento solo se permite si la celda queda pegada a su nueva región Y si
+ * la región que pierde la celda sigue de una sola pieza. Una vez reparada,
+ * la celda queda "bloqueada" para que los arreglos nunca se deshagan entre sí.
  */
 function repairToUnique(size: number, region: number[][], canonical: number[]): boolean {
   const locked = new Set<string>();
 
-  for (let iter = 0; iter < size * size * 4; iter++) {
-    const alts = findSolutions(size, region, 6).filter(
+  for (let iter = 0; iter < size * size * 10; iter++) {
+    const alts = findSolutions(size, region, 8).filter(
       (sol) => !sol.every((c, r) => c === canonical[r]),
     );
     if (alts.length === 0) return true; // única
 
     let repaired = false;
-    for (const alt of alts) {
+    for (const alt of shuffle(alts)) {
       const diffRows = shuffle(canonical.map((_c, r) => r).filter((r) => canonical[r] !== alt[r]));
       for (const row of diffRows) {
-        if (locked.has(`${row}-${alt[row]}`)) continue;
-        for (const offset of shuffle(Array.from({ length: size - 1 }, (_, i) => i + 1))) {
-          const r2 = (row + offset) % size;
+        const cell: [number, number] = [row, alt[row]];
+        const cellKey = `${row}-${alt[row]}`;
+        if (locked.has(cellKey)) continue;
+        const currentRegion = region[row][alt[row]];
+        const otherRows = shuffle(Array.from({ length: size }, (_, i) => i).filter((r2) => r2 !== row));
+        for (const r2 of otherRows) {
           const targetRegion = region[r2][alt[r2]];
-          if (region[row][alt[row]] !== targetRegion) {
-            region[row][alt[row]] = targetRegion;
-            locked.add(`${row}-${alt[row]}`);
-            repaired = true;
-            break;
-          }
+          if (targetRegion === currentRegion) continue;
+          if (!hasNeighborInRegion(size, region, cell, targetRegion)) continue;
+          if (!staysConnectedWithoutCell(size, region, currentRegion, cell)) continue;
+          region[row][alt[row]] = targetRegion;
+          locked.add(cellKey);
+          repaired = true;
+          break;
         }
         if (repaired) break;
       }
@@ -166,7 +213,7 @@ function repairToUnique(size: number, region: number[][], canonical: number[]): 
 }
 
 export function generateQueensPuzzle(size: number): QueensPuzzle {
-  for (let attempt = 0; attempt < 40; attempt++) {
+  for (let attempt = 0; attempt < 60; attempt++) {
     const solution = generateSolution(size);
     const region = partitionRegions(size, solution);
     if (repairToUnique(size, region, solution)) {
@@ -180,42 +227,14 @@ export function generateQueensPuzzle(size: number): QueensPuzzle {
   return { size, region, solution };
 }
 
-export interface ConflictInfo {
-  conflicts: Set<string>;
-}
-
-export function findConflicts(size: number, region: number[][], grid: CellState[][]): ConflictInfo {
-  const cats: [number, number][] = [];
-  for (let r = 0; r < size; r++) {
-    for (let c = 0; c < size; c++) {
-      if (grid[r][c] === 'cat') cats.push([r, c]);
-    }
-  }
-  const conflicts = new Set<string>();
-  for (let i = 0; i < cats.length; i++) {
-    for (let j = i + 1; j < cats.length; j++) {
-      const [r1, c1] = cats[i];
-      const [r2, c2] = cats[j];
-      const sameRow = r1 === r2;
-      const sameCol = c1 === c2;
-      const sameRegion = region[r1][c1] === region[r2][c2];
-      const touching = Math.abs(r1 - r2) <= 1 && Math.abs(c1 - c2) <= 1;
-      if (sameRow || sameCol || sameRegion || touching) {
-        conflicts.add(`${r1}-${c1}`);
-        conflicts.add(`${r2}-${c2}`);
-      }
-    }
-  }
-  return { conflicts };
-}
-
-export function isQueensSolved(size: number, region: number[][], grid: CellState[][]): boolean {
+/** Un gatito solo se "coloca" (estado 'cat') cuando está en la celda correcta de la solución,
+ * así que con que estén todos los gatitos puestos ya sabemos que está resuelto. */
+export function isQueensSolved(size: number, grid: CellState[][]): boolean {
   let catCount = 0;
   for (let r = 0; r < size; r++) {
     for (let c = 0; c < size; c++) {
       if (grid[r][c] === 'cat') catCount++;
     }
   }
-  if (catCount !== size) return false;
-  return findConflicts(size, region, grid).conflicts.size === 0;
+  return catCount === size;
 }

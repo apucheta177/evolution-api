@@ -4,9 +4,9 @@ App web de acertijos para jugar solo/a en el celular. Sin anuncios, sin cuentas,
 
 ## Juegos
 
-1. **Meowdoku** — un gatito 🐾 por fila, por columna y por región de color; dos gatitos no pueden tocarse (ni en diagonal). Generador propio con solución única garantizada (partición de regiones con crecimiento tipo serpiente + reparación automática hasta converger), 3 tamaños (6×6, 7×7, 8×8).
+1. **Meowdoku** — un gatito 🐱 por fila, por columna y por región de color; dos gatitos no pueden tocarse (ni en diagonal), y las celdas de cada color siempre forman un solo bloque conectado (línea, L, lo que sea, nunca separado). Generador propio con solución única garantizada (partición de regiones con crecimiento tipo serpiente + reparación que nunca rompe la conectividad), 3 tamaños (6×6, 7×7, 8×8). Si tocás un gatito en el lugar equivocado, te marca una cruz roja.
 2. **Sopa de Letras** — generador de grillas por tema (gatos, comida, animales, naturaleza, ciudad), con selección de palabras tocando la primera y la última letra.
-3. **Crucigrama** — un puñado de mini-crucigramas armados a mano, pero se completan con fichas de letra (como un Scrabble) en vez de tipear, tocando una celda y después una ficha del pool.
+3. **Crucigrama** — grilla densa tipo "word square" (sin casilleros negros, cada fila Y cada columna forma una palabra real), armada y verificada con un buscador propio sobre un diccionario español. Se completa con fichas de letra (como un Scrabble), tocando una celda y después una ficha del pool.
 4. **Frase Oculta** — una frase cifrada arriba, y abajo varias pistas (definiciones cortas); al acertar cada palabra se revelan sus letras en la frase de arriba, hasta completarla entera. Siempre hay una forma lógica de arrancar (a diferencia de un criptograma a ciegas).
 5. **Banderas** — al estilo Seterra: se muestra una bandera, hay que tocar el país correcto entre 4 opciones. Banco de 50 países.
 

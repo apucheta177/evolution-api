@@ -1,13 +1,7 @@
 import { useState } from 'react';
 import { Screen } from '../components/Screen';
 import { BigButton } from '../components/BigButton';
-import {
-  generateQueensPuzzle,
-  findConflicts,
-  isQueensSolved,
-  type CellState,
-  type QueensPuzzle,
-} from '../utils/queens';
+import { generateQueensPuzzle, isQueensSolved, type CellState, type QueensPuzzle } from '../utils/queens';
 import './Meowdoku.css';
 
 const REGION_COLORS = [
@@ -19,12 +13,6 @@ type Difficulty = 'facil' | 'medio' | 'dificil';
 const SIZE_BY_DIFFICULTY: Record<Difficulty, number> = { facil: 6, medio: 7, dificil: 8 };
 
 type Phase = 'setup' | 'generating' | 'playing' | 'won';
-
-function nextState(state: CellState): CellState {
-  if (state === 'empty') return 'x';
-  if (state === 'x') return 'cat';
-  return 'empty';
-}
 
 export function Meowdoku() {
   const [phase, setPhase] = useState<Phase>('setup');
@@ -46,10 +34,20 @@ export function Meowdoku() {
 
   const tap = (r: number, c: number) => {
     if (!puzzle) return;
+    const current = grid[r][c];
+    let nextVal: CellState;
+    if (current === 'empty') {
+      nextVal = 'x';
+    } else if (current === 'x') {
+      // ¿acá va realmente el gatito, según la solución única del tablero?
+      nextVal = puzzle.solution[r] === c ? 'cat' : 'wrong';
+    } else {
+      nextVal = 'empty';
+    }
     const next = grid.map((row) => [...row]);
-    next[r][c] = nextState(next[r][c]);
+    next[r][c] = nextVal;
     setGrid(next);
-    if (isQueensSolved(puzzle.size, puzzle.region, next)) {
+    if (isQueensSolved(puzzle.size, next)) {
       setPhase('won');
     }
   };
@@ -62,12 +60,11 @@ export function Meowdoku() {
     next[missingRow][puzzle.solution[missingRow]] = 'cat';
     setGrid(next);
     setHints((h) => h - 1);
-    if (isQueensSolved(puzzle.size, puzzle.region, next)) {
+    if (isQueensSolved(puzzle.size, next)) {
       setPhase('won');
     }
   };
 
-  const conflicts = puzzle ? findConflicts(puzzle.size, puzzle.region, grid).conflicts : new Set<string>();
   const catCount = grid.reduce((sum, row) => sum + row.filter((v) => v === 'cat').length, 0);
 
   return (
@@ -104,19 +101,18 @@ export function Meowdoku() {
             style={{ gridTemplateColumns: `repeat(${puzzle.size}, 1fr)` }}
           >
             {grid.map((row, r) =>
-              row.map((state, c) => {
-                const conflict = conflicts.has(`${r}-${c}`);
-                return (
-                  <button
-                    key={`${r}-${c}`}
-                    className={['meowdoku-cell', conflict ? 'is-conflict' : ''].join(' ')}
-                    style={{ background: REGION_COLORS[puzzle.region[r][c] % REGION_COLORS.length] }}
-                    onClick={() => phase === 'playing' && tap(r, c)}
-                  >
-                    {state === 'cat' ? '🐾' : state === 'x' ? '✕' : ''}
-                  </button>
-                );
-              }),
+              row.map((state, c) => (
+                <button
+                  key={`${r}-${c}`}
+                  className={['meowdoku-cell', `is-${state}`].join(' ')}
+                  style={{ background: REGION_COLORS[puzzle.region[r][c] % REGION_COLORS.length] }}
+                  onClick={() => phase === 'playing' && tap(r, c)}
+                >
+                  {state === 'cat' && <span className="meowdoku-mark">🐱</span>}
+                  {state === 'x' && <span className="meowdoku-mark meowdoku-x">✕</span>}
+                  {state === 'wrong' && <span className="meowdoku-mark meowdoku-wrong">✕</span>}
+                </button>
+              )),
             )}
           </div>
 

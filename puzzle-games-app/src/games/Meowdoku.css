@@ -53,9 +53,6 @@
 }
 
 .meowdoku-cell {
-  color: #1b1f2e;
-  font-size: clamp(1rem, 4.5vw, 1.5rem);
-  font-weight: 900;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -63,9 +60,26 @@
   filter: brightness(0.9);
 }
 
-.meowdoku-cell.is-conflict {
-  outline: 3px dashed #ff2b2b;
-  outline-offset: -3px;
+.meowdoku-mark {
+  width: 68%;
+  height: 68%;
+  border-radius: 50%;
+  background: rgba(22, 26, 40, 0.88);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(1rem, 4.2vw, 1.4rem);
+  font-weight: 900;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.5);
+}
+
+.meowdoku-x {
+  color: #f5f3ee;
+}
+
+.meowdoku-wrong {
+  background: #c81e1e;
+  color: white;
 }
 
 .meowdoku-won {
