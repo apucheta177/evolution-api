@@ -5,4 +5,5 @@ export const GAMES: GameDef[] = [
   { id: 'criptograma', title: 'Criptograma', emoji: '🔐', tagline: 'Descifrá la frase, cada letra es otra letra.', color: 'linear-gradient(135deg,#7dd8c6,#4f93c9)' },
   { id: 'sopaDeLetras', title: 'Sopa de Letras', emoji: '🔎', tagline: 'Encontrá las palabras escondidas en la grilla.', color: 'linear-gradient(135deg,#ff8fab,#7dd8c6)' },
   { id: 'crucigrama', title: 'Crucigrama', emoji: '✏️', tagline: 'El clásico, con pistas horizontales y verticales.', color: 'linear-gradient(135deg,#ffb648,#7dd8c6)' },
+  { id: 'fraseOculta', title: 'Frase Oculta', emoji: '🗝️', tagline: 'Resolvé pistas para revelar la frase secreta.', color: 'linear-gradient(135deg,#7dd8c6,#ff8fab)' },
 ];

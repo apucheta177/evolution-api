@@ -4,6 +4,7 @@ import { Meowdoku } from './games/Meowdoku';
 import { Criptograma } from './games/Criptograma';
 import { SopaDeLetras } from './games/SopaDeLetras';
 import { Crucigrama } from './games/Crucigrama';
+import { FraseOculta } from './games/FraseOculta';
 
 function Router() {
   const { screen } = useApp();
@@ -19,6 +20,8 @@ function Router() {
       return <SopaDeLetras />;
     case 'crucigrama':
       return <Crucigrama />;
+    case 'fraseOculta':
+      return <FraseOculta />;
     default:
       return <Home />;
   }

@@ -1,0 +1,95 @@
+.frase-hint {
+  color: var(--text-dim);
+  text-align: center;
+  font-size: 0.88rem;
+}
+
+.frase-board {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  justify-content: center;
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: 16px 12px;
+  width: 100%;
+}
+
+.frase-cell {
+  min-width: 20px;
+  text-align: center;
+  font-size: 1.05rem;
+  font-weight: 900;
+  color: var(--text-dim);
+  border-bottom: 2px solid var(--surface-alt);
+  padding-bottom: 2px;
+}
+
+.frase-cell.is-solved {
+  color: var(--teal);
+  border-color: var(--teal);
+}
+
+.frase-space {
+  width: 12px;
+}
+
+.frase-clues {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.frase-clue-card {
+  background: var(--surface);
+  border-radius: 14px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.frase-clue-card.is-solved {
+  background: rgba(125, 216, 198, 0.15);
+}
+
+.frase-clue-text {
+  font-size: 0.88rem;
+  color: var(--text);
+}
+
+.frase-clue-input {
+  background: var(--surface-alt);
+  border: none;
+  border-radius: 10px;
+  padding: 10px 12px;
+  color: var(--text);
+  font-size: 1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.frase-clue-input:focus {
+  outline: 2px solid var(--amber);
+}
+
+.frase-clue-answer {
+  color: var(--teal);
+  font-weight: 800;
+  font-size: 1rem;
+}
+
+.frase-won {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  align-items: center;
+  width: 100%;
+  max-width: 300px;
+}
+
+.frase-won-text {
+  font-size: 1.3rem;
+  font-weight: 900;
+}

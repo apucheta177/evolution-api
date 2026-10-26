@@ -2,58 +2,85 @@ import { useState } from 'react';
 import { Screen } from '../components/Screen';
 import { BigButton } from '../components/BigButton';
 import {
-  generatePuzzle,
-  isGridComplete,
-  isGridCorrect,
-  hasConflict,
-  type Grid,
-  type Difficulty,
-} from '../utils/sudoku';
+  generateQueensPuzzle,
+  findConflicts,
+  isQueensSolved,
+  type CellState,
+  type QueensPuzzle,
+} from '../utils/queens';
 import './Meowdoku.css';
 
-const SYMBOLS = ['🐾', '🐟', '🧶', '🐭', '🥛', '🎀', '💗', '⭐', '🌙'];
+const REGION_COLORS = [
+  '#ef4444', '#f97316', '#eab308', '#84cc16', '#22c55e',
+  '#14b8a6', '#3b82f6', '#8b5cf6', '#ec4899', '#64748b',
+];
+
+type Difficulty = 'facil' | 'medio' | 'dificil';
+const SIZE_BY_DIFFICULTY: Record<Difficulty, number> = { facil: 6, medio: 7, dificil: 8 };
 
 type Phase = 'setup' | 'generating' | 'playing' | 'won';
 
+function nextState(state: CellState): CellState {
+  if (state === 'empty') return 'x';
+  if (state === 'x') return 'cat';
+  return 'empty';
+}
+
 export function Meowdoku() {
   const [phase, setPhase] = useState<Phase>('setup');
-  const [clues, setClues] = useState<Grid>([]);
-  const [solution, setSolution] = useState<Grid>([]);
-  const [grid, setGrid] = useState<Grid>([]);
-  const [selected, setSelected] = useState<[number, number] | null>(null);
+  const [puzzle, setPuzzle] = useState<QueensPuzzle | null>(null);
+  const [grid, setGrid] = useState<CellState[][]>([]);
+  const [hints, setHints] = useState(3);
 
   const start = (difficulty: Difficulty) => {
     setPhase('generating');
     setTimeout(() => {
-      const { puzzle, solution } = generatePuzzle(difficulty);
-      setClues(puzzle);
-      setSolution(solution);
-      setGrid(puzzle.map((row) => [...row]));
-      setSelected(null);
+      const size = SIZE_BY_DIFFICULTY[difficulty];
+      const p = generateQueensPuzzle(size);
+      setPuzzle(p);
+      setGrid(Array.from({ length: size }, () => Array(size).fill('empty')));
+      setHints(3);
       setPhase('playing');
     }, 30);
   };
 
-  const place = (symbolIndex: number) => {
-    if (!selected) return;
-    const [r, c] = selected;
-    if (clues[r][c] !== 0) return;
+  const tap = (r: number, c: number) => {
+    if (!puzzle) return;
     const next = grid.map((row) => [...row]);
-    next[r][c] = next[r][c] === symbolIndex + 1 ? 0 : symbolIndex + 1;
+    next[r][c] = nextState(next[r][c]);
     setGrid(next);
-    if (isGridComplete(next) && isGridCorrect(next, solution)) {
+    if (isQueensSolved(puzzle.size, puzzle.region, next)) {
       setPhase('won');
     }
   };
+
+  const useHint = () => {
+    if (!puzzle || hints <= 0) return;
+    const missingRow = puzzle.solution.findIndex((col, r) => grid[r][col] !== 'cat');
+    if (missingRow === -1) return;
+    const next = grid.map((row) => [...row]);
+    next[missingRow][puzzle.solution[missingRow]] = 'cat';
+    setGrid(next);
+    setHints((h) => h - 1);
+    if (isQueensSolved(puzzle.size, puzzle.region, next)) {
+      setPhase('won');
+    }
+  };
+
+  const conflicts = puzzle ? findConflicts(puzzle.size, puzzle.region, grid).conflicts : new Set<string>();
+  const catCount = grid.reduce((sum, row) => sum + row.filter((v) => v === 'cat').length, 0);
 
   return (
     <Screen title="Meowdoku">
       {phase === 'setup' && (
         <div className="meowdoku-setup">
-          <p className="meowdoku-intro">Sudoku de toda la vida, pero con cositas de gato en vez de números.</p>
-          <BigButton onClick={() => start('facil')}>😺 Fácil</BigButton>
-          <BigButton variant="secondary" onClick={() => start('medio')}>😼 Medio</BigButton>
-          <BigButton variant="danger" onClick={() => start('dificil')}>🙀 Difícil</BigButton>
+          <p className="meowdoku-intro">
+            Un gatito 🐾 por fila, por columna y por color. Dos gatitos no pueden tocarse, ni al costado ni en
+            diagonal.
+          </p>
+          <BigButton onClick={() => start('facil')}>😺 Fácil (6×6)</BigButton>
+          <BigButton variant="secondary" onClick={() => start('medio')}>😼 Medio (7×7)</BigButton>
+          <BigButton variant="danger" onClick={() => start('dificil')}>🙀 Difícil (8×8)</BigButton>
         </div>
       )}
 
@@ -63,43 +90,35 @@ export function Meowdoku() {
         </div>
       )}
 
-      {(phase === 'playing' || phase === 'won') && (
+      {(phase === 'playing' || phase === 'won') && puzzle && (
         <>
-          <div className="meowdoku-grid">
+          <div className="meowdoku-status">
+            <span className="chip">🐾 {catCount}/{puzzle.size}</span>
+            <button className="chip hint-chip" onClick={useHint} disabled={hints <= 0 || phase === 'won'}>
+              🐟 Pista ({hints})
+            </button>
+          </div>
+
+          <div
+            className="meowdoku-grid"
+            style={{ gridTemplateColumns: `repeat(${puzzle.size}, 1fr)` }}
+          >
             {grid.map((row, r) =>
-              row.map((val, c) => {
-                const isClue = clues[r][c] !== 0;
-                const isSelected = selected?.[0] === r && selected?.[1] === c;
-                const conflict = val !== 0 && hasConflict(grid, r, c);
+              row.map((state, c) => {
+                const conflict = conflicts.has(`${r}-${c}`);
                 return (
                   <button
                     key={`${r}-${c}`}
-                    className={[
-                      'meowdoku-cell',
-                      isClue ? 'is-clue' : '',
-                      isSelected ? 'is-selected' : '',
-                      conflict ? 'is-conflict' : '',
-                      c % 3 === 0 ? 'border-left' : '',
-                      r % 3 === 0 ? 'border-top' : '',
-                    ].join(' ')}
-                    onClick={() => !isClue && phase === 'playing' && setSelected([r, c])}
+                    className={['meowdoku-cell', conflict ? 'is-conflict' : ''].join(' ')}
+                    style={{ background: REGION_COLORS[puzzle.region[r][c] % REGION_COLORS.length] }}
+                    onClick={() => phase === 'playing' && tap(r, c)}
                   >
-                    {val !== 0 ? SYMBOLS[val - 1] : ''}
+                    {state === 'cat' ? '🐾' : state === 'x' ? '✕' : ''}
                   </button>
                 );
               }),
             )}
           </div>
-
-          {phase === 'playing' && (
-            <div className="meowdoku-palette">
-              {SYMBOLS.map((s, i) => (
-                <button key={s} className="palette-btn" onClick={() => place(i)}>
-                  {s}
-                </button>
-              ))}
-            </div>
-          )}
 
           {phase === 'won' && (
             <div className="meowdoku-won">
