@@ -1,0 +1,88 @@
+.ws-setup {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  max-width: 360px;
+  margin-top: 20px;
+}
+
+.ws-intro {
+  text-align: center;
+  color: var(--text-dim);
+  margin-bottom: 6px;
+}
+
+.ws-grid {
+  display: grid;
+  gap: 2px;
+  background: var(--surface-alt);
+  border-radius: 12px;
+  padding: 6px;
+  width: 100%;
+  max-width: 420px;
+}
+
+.ws-cell {
+  background: var(--surface);
+  color: var(--text);
+  aspect-ratio: 1;
+  border-radius: 4px;
+  font-size: clamp(0.65rem, 2.6vw, 0.95rem);
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ws-cell.is-preview {
+  background: var(--amber);
+  color: #1b1f2e;
+}
+
+.ws-cell.is-found {
+  background: var(--teal);
+  color: #1b1f2e;
+}
+
+.ws-word-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+}
+
+.ws-word-chip {
+  background: var(--surface);
+  color: var(--text);
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.ws-word-chip.is-found {
+  background: var(--teal);
+  color: #1b1f2e;
+  text-decoration: line-through;
+}
+
+.ws-hint {
+  color: var(--text-dim);
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+.ws-won {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  align-items: center;
+  width: 100%;
+  max-width: 300px;
+}
+
+.ws-won-text {
+  font-size: 1.3rem;
+  font-weight: 900;
+}

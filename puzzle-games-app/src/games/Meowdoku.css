@@ -1,0 +1,98 @@
+.meowdoku-setup {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  width: 100%;
+  max-width: 360px;
+  margin-top: 30px;
+}
+
+.meowdoku-intro {
+  text-align: center;
+  color: var(--text-dim);
+  margin-bottom: 8px;
+}
+
+.meowdoku-status {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.chip {
+  background: var(--surface);
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.hint-chip {
+  background: var(--surface);
+  color: var(--text);
+  border-radius: 999px;
+  padding: 8px 14px;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.hint-chip:disabled {
+  opacity: 0.4;
+}
+
+.meowdoku-grid {
+  display: grid;
+  gap: 3px;
+  border-radius: 12px;
+  overflow: hidden;
+  width: 100%;
+  max-width: 400px;
+  aspect-ratio: 1;
+  border: 3px solid var(--bg);
+}
+
+.meowdoku-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 1;
+  filter: brightness(0.9);
+}
+
+.meowdoku-mark {
+  width: 68%;
+  height: 68%;
+  border-radius: 50%;
+  background: rgba(22, 26, 40, 0.88);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(1rem, 4.2vw, 1.4rem);
+  font-weight: 900;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.5);
+}
+
+.meowdoku-x {
+  color: #f5f3ee;
+}
+
+.meowdoku-wrong {
+  background: #c81e1e;
+  color: white;
+}
+
+.meowdoku-won {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  align-items: center;
+  margin-top: 16px;
+  width: 100%;
+  max-width: 320px;
+}
+
+.meowdoku-won-text {
+  font-size: 1.4rem;
+  font-weight: 900;
+}
